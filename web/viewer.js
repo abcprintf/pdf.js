@@ -45,6 +45,7 @@ function getViewerConfiguration() {
       zoomIn: document.getElementById("zoomInButton"),
       zoomOut: document.getElementById("zoomOutButton"),
       print: document.getElementById("printButton"),
+      sendToServer: document.getElementById("sendToServer"),
       editorCommentButton: document.getElementById("editorCommentButton"),
       editorCommentParamsToolbar: document.getElementById(
         "editorCommentParamsToolbar"
@@ -290,6 +291,50 @@ function getViewerConfiguration() {
   };
 }
 
+/**
+ * Additional initialization steps that need to be performed once
+ * the DOM is fully loaded.
+ */
+const generateFilename = () => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0"); // Months are zero-indexed
+  const day = String(now.getDate()).padStart(2, "0");
+  const hours = String(now.getHours()).padStart(2, "0");
+  const minutes = String(now.getMinutes()).padStart(2, "0");
+
+  return `pdf_edited_${year}${month}${day}${hours}${minutes}.pdf`;
+};
+
+// eslint-disable-next-line no-unused-vars
+function saveFileBlob(blob, filename) {
+  if (window.navigator.msSaveOrOpenBlob) {
+    window.navigator.msSaveOrOpenBlob(blob, filename);
+  } else {
+    const a = document.createElement("a");
+    document.body.append(a);
+    const url = window.URL.createObjectURL(blob);
+    a.href = url;
+    a.download = filename;
+    a.click();
+    setTimeout(() => {
+      window.URL.revokeObjectURL(url);
+      a.remove();
+    }, 0);
+  }
+}
+
+function sendFileBlobToAPI(blob, filename) {
+  window.parent.postMessage(
+    {
+      type: "sendFileBlob",
+      blobData: blob,
+      filename,
+    },
+    "*"
+  );
+}
+
 function webViewerLoad() {
   const config = getViewerConfiguration();
 
@@ -316,6 +361,38 @@ function webViewerLoad() {
       document.dispatchEvent(event);
     }
   }
+
+  /**
+   * Event [saveToServer]
+   */
+  document
+    .getElementById("saveToServer")
+    .addEventListener("click", function () {
+      PDFViewerApplication.pdfDocument.saveDocument().then(function (buff) {
+        /**
+         * Show LoadingOverlay
+         */
+        // eslint-disable-next-line no-undef
+        if (typeof $ !== "undefined") {
+          // eslint-disable-next-line no-undef
+          $.LoadingOverlay("show", {
+            image: "",
+            text: "กำลังบันทึกไฟล์...",
+          });
+        } else {
+          console.error("jQuery is not defined.");
+        }
+
+        const blob = new Blob([buff]);
+        /**
+         * generate newfile
+         */
+        const filename = generateFilename();
+        // saveFileBlob(blob, filename);
+        sendFileBlobToAPI(blob, filename);
+      });
+    });
+
   PDFViewerApplication.run(config);
 }
 

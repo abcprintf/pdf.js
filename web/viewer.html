@@ -42,6 +42,10 @@ See https://github.com/adobe-type-tools/cmap-resources
 <!--<link rel="localization" href="toolkit/pdfviewer/viewer.ftl"/>-->
 <!--#else-->
     <link rel="stylesheet" href="viewer.css">
+    <link rel="stylesheet" href="eoffice.css">
+
+    <script src="jquery-2.2.4.min.js"></script>
+    <script src="loadingoverlay.min.js"></script>
 <!--#endif-->
 
 <!--#if MOZCENTRAL-->
@@ -358,6 +362,11 @@ See https://github.com/adobe-type-tools/cmap-resources
                 <div id="editorModeSeparator" class="verticalToolbarSeparator"></div>
 
                 <div class="toolbarHorizontalGroup hiddenMediumView">
+
+                  <button id="saveToServer" class="toolbarButton" type="button" title="Save To Server" tabindex="0" data-l10n-id="pdfjs-save-to-server">
+                    <span data-l10n-id="pdfjs-save-to-server-label"></span>
+                  </button>
+
                   <button id="printButton" class="toolbarButton" type="button" tabindex="0" data-l10n-id="pdfjs-print-button">
                     <span data-l10n-id="pdfjs-print-button-label"></span>
                   </button>

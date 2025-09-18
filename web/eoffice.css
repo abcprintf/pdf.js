@@ -1,0 +1,13 @@
+:root {
+  --toolbarButton-saveToServer-icon: url(images/toolbarButton-send-to-server.svg);
+}
+
+#saveToServer::before {
+  mask-image: var(--toolbarButton-saveToServer-icon);
+}
+
+#secondaryToolbar {
+  #presentationMode::before {
+    mask-image: var(--toolbarButton-presentationMode-icon);
+  }
+}

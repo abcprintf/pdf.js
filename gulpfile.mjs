@@ -1136,6 +1136,17 @@ function buildGeneric(defines, dir) {
         ])
       )
       .pipe(gulp.dest(dir + "web")),
+    preprocessCSS("web/eoffice.css", defines)
+      .pipe(
+        postcss([
+          postcssDirPseudoClass(),
+          discardCommentsCSS(),
+          postcssNesting(),
+          postcssLightDarkFunction({ preserve: true }),
+          autoprefixer(AUTOPREFIXER_CONFIG),
+        ])
+      )
+      .pipe(gulp.dest(dir + "web")),
 
     gulp
       .src("web/compressed.tracemonkey-pldi-09.pdf", { encoding: false })
@@ -1145,6 +1156,8 @@ function buildGeneric(defines, dir) {
     gulp.src("web/loadingoverlay.min.js").pipe(gulp.dest(dir + "web")),
     // copy jquery-2.2.4.min.js
     gulp.src("web/jquery-2.2.4.min.js").pipe(gulp.dest(dir + "web")),
+    // copy viewer-bootstrap.html
+    gulp.src("web/viewer-bootstrap.html").pipe(gulp.dest(dir + "web")),
   ]);
 }
 
