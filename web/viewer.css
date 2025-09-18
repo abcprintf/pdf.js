@@ -98,6 +98,7 @@
   --toolbarButton-openFile-icon: url(images/toolbarButton-openFile.svg);
   /*#endif*/
   --toolbarButton-download-icon: url(images/toolbarButton-download.svg);
+  --toolbarButton-saveToServer-icon: url(images/toolbarButton-send-to-server.svg);
   --toolbarButton-bookmark-icon: url(images/toolbarButton-bookmark.svg);
   --toolbarButton-viewThumbnail-icon: url(images/toolbarButton-viewThumbnail.svg);
   --toolbarButton-viewOutline-icon: url(images/toolbarButton-viewOutline.svg);
@@ -828,6 +829,10 @@ body {
   mask-image: var(--toolbarButton-download-icon);
 }
 
+#saveToServer::before {
+  mask-image: var(--toolbarButton-saveToServer-icon);
+}
+
 #viewThumbnail::before {
   mask-image: var(--toolbarButton-viewThumbnail-icon);
 }
@@ -1295,6 +1300,10 @@ dialog :link {
 
     #secondaryDownload::before {
       mask-image: var(--toolbarButton-download-icon);
+    }
+
+    #secondarysaveToServer::before {
+      mask-image: var(--toolbarButton-saveToServer-icon);
     }
 
     #presentationMode::before {

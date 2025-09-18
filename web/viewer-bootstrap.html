@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>viewer-bootstrap</title>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <h1 class="text-center mt-2">E-Office pdf viewer</h1>
+
+    <!-- start iframe -->
+    <div class="container mt-2">
+      <div class="row">
+        <div class="col-9">
+          <!-- <iframe src="http://localhost:8888/web/viewer.html?file=/web/compressed.tracemonkey-pldi-09.pdf" id="view-iframe" width="100%" height="1000px" frameborder="0"></iframe> -->
+          <iframe
+            src="http://localhost:8888/build/generic/web/viewer.html?file=compressed.tracemonkey-pldi-09.pdf"
+            id="view-iframe"
+            width="100%"
+            height="1000px"
+            frameborder="0"
+          ></iframe>
+        </div>
+        <div class="col-3">
+          <div class="card" style="width: 18rem">
+            <div class="card-body">
+              <h5 class="card-title">Events Trigger</h5>
+              <button type="button" class="btn btn-danger" id="btn-print">
+                Print PDF
+              </button>
+              <button type="button" class="btn btn-secondary" id="btn-download">
+                Download PDF
+              </button>
+              <button
+                type="button"
+                class="btn btn-success"
+                id="btn-save-to-server"
+              >
+                Save To Server
+              </button>
+              <button type="button" class="btn btn-info" id="btn-editorStamp">
+                Stamp Image
+              </button>
+              <button
+                type="button"
+                class="btn btn-warning"
+                id="btn-editorFreeText"
+              >
+                Stamp Text
+              </button>
+              <button type="button" class="btn btn-primary" id="btn-editorInk">
+                Draw
+              </button>
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">Advance Events</h5>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                id="btn-copy-image-to-pdf"
+              >
+                Copy image to PDF
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- start iframe -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/451/fabric.min.js"></script> -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"
+      integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      $(document).ready(function () {
+        var iframe = document.getElementsByTagName("iframe")[0];
+        var iframeWindow = iframe.contentWindow;
+        var iframeDocument = iframe.contentDocument || iframeWindow.document;
+
+        window.addEventListener(
+          "message",
+          function (event) {
+            if (event.data.type === "sendFileBlob") {
+              const blob = event.data.blobData;
+              console.log(event.data);
+
+              /**
+               * Example: แปลง Blob เป็น URL เพื่อแสดงตัวอย่างหรือดาวน์โหลด
+               */
+              const url = URL.createObjectURL(blob);
+              const link = document.createElement("a");
+              link.href = url;
+              link.download = "edited-document.pdf"; // ชื่อไฟล์ที่ต้องการ
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+              URL.revokeObjectURL(url); // ปล่อย URL เมื่อไม่ใช้งานแล้ว
+
+              // ตอนนี้คุณสามารถจัดการ blob นี้ได้ เช่น อัปโหลดไปยังเซิร์ฟเวอร์
+              // uploadBlobToServer(blob);
+            }
+          },
+          false
+        );
+
+        /**
+         * init fabric #viewer
+         */
+        // setTimeout(function() {
+        //   let fCanvas = new fabric.Canvas(iframeDocument.getElementById('viewerContainer'));
+        // }, 5000);
+
+        $("#btn-print").click(function () {
+          iframeDocument.getElementById("print").click();
+        });
+
+        $("#btn-download").click(function () {
+          iframeDocument.getElementById("download").click();
+        });
+
+        $("#btn-save-to-server").click(function () {
+          iframeDocument.getElementById("saveToServer").click();
+        });
+
+        $("#btn-editorStamp").click(function () {
+          iframeDocument.getElementById("editorStamp").click();
+        });
+
+        $("#btn-editorFreeText").click(function () {
+          iframeDocument.getElementById("editorFreeText").click();
+        });
+
+        $("#btn-editorInk").click(function () {
+          iframeDocument.getElementById("editorInk").click();
+        });
+
+        $("#btn-copy-image-to-pdf").on("click", function () {
+          // fCanvas = new fabric.Canvas('canvas');
+        });
+      });
+    </script>
+  </body>
+</html>

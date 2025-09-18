@@ -42,6 +42,8 @@ See https://github.com/adobe-type-tools/cmap-resources
 <!--<link rel="localization" href="toolkit/pdfviewer/viewer.ftl"/>-->
 <!--#else-->
     <link rel="stylesheet" href="viewer.css">
+    <script src="jquery-2.2.4.min.js"></script>
+    <script src="loadingoverlay.min.js"></script>
 <!--#endif-->
 
 <!--#if MOZCENTRAL-->
@@ -379,6 +381,10 @@ See https://github.com/adobe-type-tools/cmap-resources
 
                 <div id="editorModeSeparator" class="verticalToolbarSeparator"></div>
 
+                <button id="saveToServer" class="toolbarButton hiddenMediumView" type="button" title="Save To Server" tabindex="44" data-l10n-id="pdfjs-save-to-server">
+                  <span data-l10n-id="pdfjs-save-to-server-label">Save To Server</span>
+                </button>
+
                 <button id="print" class="toolbarButton hiddenMediumView" type="button" title="Print" tabindex="41" data-l10n-id="pdfjs-print-button">
                   <span data-l10n-id="pdfjs-print-button-label">Print</span>
                 </button>
@@ -387,9 +393,11 @@ See https://github.com/adobe-type-tools/cmap-resources
                   <span data-l10n-id="pdfjs-save-button-label">Save</span>
                 </button>
 
+                
+
                 <div class="verticalToolbarSeparator hiddenMediumView"></div>
 
-                <button id="secondaryToolbarToggle" class="toolbarButton" type="button" title="Tools" tabindex="43" data-l10n-id="pdfjs-tools-button" aria-expanded="false" aria-controls="secondaryToolbar">
+                <button id="secondaryToolbarToggle" class="toolbarButton" type="button" title="Tools" tabindex="44" data-l10n-id="pdfjs-tools-button" aria-expanded="false" aria-controls="secondaryToolbar">
                   <span data-l10n-id="pdfjs-tools-button-label">Tools</span>
                 </button>
               </div>

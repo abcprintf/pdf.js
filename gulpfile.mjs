@@ -1039,6 +1039,11 @@ function buildGeneric(defines, dir) {
     gulp
       .src("web/compressed.tracemonkey-pldi-09.pdf", { encoding: false })
       .pipe(gulp.dest(dir + "web")),
+
+    // copy loadingoverlay.min.js
+    gulp.src("web/loadingoverlay.min.js").pipe(gulp.dest(dir + "web")),
+    // copy jquery-2.2.4.min.js
+    gulp.src("web/jquery-2.2.4.min.js").pipe(gulp.dest(dir + "web")),
   ]);
 }
 
