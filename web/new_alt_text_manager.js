@@ -40,7 +40,7 @@ class NewAltTextManager {
 
   #guessedAltText;
 
-  #hasAI = false;
+  #hasAI = null;
 
   #isEditing = null;
 
@@ -371,14 +371,21 @@ class NewAltTextManager {
     // TODO: get this value from Firefox
     //   (https://bugzilla.mozilla.org/show_bug.cgi?id=1908184)
     const AI_MAX_IMAGE_DIMENSION = 224;
+    const MAX_PREVIEW_DIMENSION = 180;
 
     // The max dimension of the preview in the dialog is 180px, so we keep 224px
     // and rescale it thanks to css.
 
-    let canvas;
+    let canvas, width, height;
     if (mlManager) {
-      ({ canvas, imageData: this.#imageData } = editor.copyCanvas(
+      ({
+        canvas,
+        width,
+        height,
+        imageData: this.#imageData,
+      } = editor.copyCanvas(
         AI_MAX_IMAGE_DIMENSION,
+        MAX_PREVIEW_DIMENSION,
         /* createImageData = */ true
       ));
       if (hasAI) {
@@ -388,13 +395,17 @@ class NewAltTextManager {
         );
       }
     } else {
-      ({ canvas } = editor.copyCanvas(
+      ({ canvas, width, height } = editor.copyCanvas(
         AI_MAX_IMAGE_DIMENSION,
+        MAX_PREVIEW_DIMENSION,
         /* createImageData = */ false
       ));
     }
 
     canvas.setAttribute("role", "presentation");
+    const { style } = canvas;
+    style.width = `${width}px`;
+    style.height = `${height}px`;
     this.#imagePreview.append(canvas);
 
     this.#toggleNotNow();
@@ -429,9 +440,7 @@ class NewAltTextManager {
   }
 
   #finish() {
-    if (this.#overlayManager.active === this.#dialog) {
-      this.#overlayManager.close(this.#dialog);
-    }
+    this.#overlayManager.closeIfActive(this.#dialog);
   }
 
   #close() {
@@ -449,6 +458,15 @@ class NewAltTextManager {
     this.#uiManager = null;
   }
 
+  #extractWords(text) {
+    return new Set(
+      text
+        .toLowerCase()
+        .split(/[^\p{L}\p{N}]+/gu)
+        .filter(x => !!x)
+    );
+  }
+
   #save() {
     const altText = this.#textarea.value.trim();
     this.#currentEditor.altTextData = {
@@ -458,8 +476,8 @@ class NewAltTextManager {
     this.#currentEditor.altTextData.guessedAltText = this.#guessedAltText;
 
     if (this.#guessedAltText && this.#guessedAltText !== altText) {
-      const guessedWords = new Set(this.#guessedAltText.split(/\s+/));
-      const words = new Set(altText.split(/\s+/));
+      const guessedWords = this.#extractWords(this.#guessedAltText);
+      const words = this.#extractWords(altText);
       this.#currentEditor._reportTelemetry({
         action: "pdfjs.image.alt_text.user_edit",
         data: {
@@ -676,9 +694,7 @@ class ImageAltTextSettings {
   }
 
   #finish() {
-    if (this.#overlayManager.active === this.#dialog) {
-      this.#overlayManager.close(this.#dialog);
-    }
+    this.#overlayManager.closeIfActive(this.#dialog);
   }
 }
 

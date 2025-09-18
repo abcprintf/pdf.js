@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import { closePages, loadAndWait } from "./test_utils.mjs";
+import { closePages, FSI, loadAndWait, PDI } from "./test_utils.mjs";
 
 function fuzzyMatch(a, b, browserName, pixelFuzz = 3) {
   expect(a)
@@ -28,11 +28,11 @@ describe("find bar", () => {
   describe("highlight all", () => {
     let pages;
 
-    beforeAll(async () => {
+    beforeEach(async () => {
       pages = await loadAndWait("find_all.pdf", ".textLayer", 100);
     });
 
-    afterAll(async () => {
+    afterEach(async () => {
       await closePages(pages);
     });
 
@@ -40,10 +40,10 @@ describe("find bar", () => {
       await Promise.all(
         pages.map(async ([browserName, page]) => {
           // Highlight all occurrences of the letter A (case insensitive).
-          await page.click("#viewFind");
-          await page.waitForSelector("#viewFind", { hidden: false });
+          await page.click("#viewFindButton");
+          await page.waitForSelector("#findInput", { visible: true });
           await page.type("#findInput", "a");
-          await page.click("#findHighlightAll");
+          await page.click("#findHighlightAll + label");
           await page.waitForSelector(".textLayer .highlight");
 
           // The PDF file contains the text 'AB BA' in a monospace font on a
@@ -89,19 +89,19 @@ describe("find bar", () => {
   describe("highlight all (XFA)", () => {
     let pages;
 
-    beforeAll(async () => {
+    beforeEach(async () => {
       pages = await loadAndWait("xfa_imm5257e.pdf", ".xfaLayer");
     });
 
-    afterAll(async () => {
+    afterEach(async () => {
       await closePages(pages);
     });
 
     it("must search xfa correctly", async () => {
       await Promise.all(
         pages.map(async ([browserName, page]) => {
-          await page.click("#viewFind");
-          await page.waitForSelector("#viewFind", { hidden: false });
+          await page.click("#viewFindButton");
+          await page.waitForSelector("#findInput", { visible: true });
           await page.type("#findInput", "preferences");
           await page.waitForSelector("#findInput[data-status='']");
           await page.waitForSelector(".xfaLayer .highlight");
@@ -110,10 +110,6 @@ describe("find bar", () => {
           );
           const resultElement = await page.waitForSelector("#findResultsCount");
           const resultText = await resultElement.evaluate(el => el.textContent);
-          /** Unicode bidi isolation characters. */
-          const FSI = "\u2068";
-          const PDI = "\u2069";
-          // Fluent adds these markers to the result text.
           expect(resultText).toEqual(`${FSI}1${PDI} of ${FSI}1${PDI} match`);
           const selectedElement = await page.waitForSelector(
             ".highlight.selected"
@@ -122,6 +118,61 @@ describe("find bar", () => {
             el => el.textContent
           );
           expect(selectedText).toEqual("Preferences");
+        })
+      );
+    });
+  });
+
+  describe("issue19207.pdf", () => {
+    let pages;
+
+    beforeEach(async () => {
+      pages = await loadAndWait("issue19207.pdf", ".textLayer", 200);
+    });
+
+    afterEach(async () => {
+      await closePages(pages);
+    });
+
+    it("must scroll to the search result text", async () => {
+      await Promise.all(
+        pages.map(async ([browserName, page]) => {
+          // Search for "40"
+          await page.click("#viewFindButton");
+          await page.waitForSelector("#findInput", { visible: true });
+          await page.type("#findInput", "40");
+
+          const highlight = await page.waitForSelector(".textLayer .highlight");
+
+          expect(await highlight.isIntersectingViewport()).toBeTrue();
+        })
+      );
+    });
+  });
+
+  describe("scrolls to the search result text for smaller viewports", () => {
+    let pages;
+
+    beforeEach(async () => {
+      pages = await loadAndWait("tracemonkey.pdf", ".textLayer", 100);
+    });
+
+    afterEach(async () => {
+      await closePages(pages);
+    });
+
+    it("must scroll to the search result text", async () => {
+      await Promise.all(
+        pages.map(async ([browserName, page]) => {
+          // Set a smaller viewport to simulate a mobile device
+          await page.setViewport({ width: 350, height: 600 });
+          await page.click("#viewFindButton");
+          await page.waitForSelector("#findInput", { visible: true });
+          await page.type("#findInput", "productivity");
+
+          const highlight = await page.waitForSelector(".textLayer .highlight");
+
+          expect(await highlight.isIntersectingViewport()).toBeTrue();
         })
       );
     });

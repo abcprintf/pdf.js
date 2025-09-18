@@ -121,7 +121,7 @@ class DownloadManager {
         window.open(viewerUrl);
         return true;
       } catch (ex) {
-        console.error(`openOrDownloadData: ${ex}`);
+        console.error("openOrDownloadData:", ex);
         // Release the `blobUrl`, since opening it failed, and fallback to
         // downloading the PDF file.
         URL.revokeObjectURL(blobUrl);
@@ -495,6 +495,83 @@ class MLManager {
   }
 }
 
+class SignatureStorage {
+  #eventBus = null;
+
+  #signatures = null;
+
+  #signal = null;
+
+  constructor(eventBus, signal) {
+    this.#eventBus = eventBus;
+    this.#signal = signal;
+  }
+
+  #handleSignature(data) {
+    return FirefoxCom.requestAsync("handleSignature", data);
+  }
+
+  async getAll() {
+    if (this.#signal) {
+      window.addEventListener(
+        "storedSignaturesChanged",
+        () => {
+          this.#signatures = null;
+          this.#eventBus?.dispatch("storedsignatureschanged", { source: this });
+        },
+        { signal: this.#signal }
+      );
+      this.#signal = null;
+    }
+    if (!this.#signatures) {
+      this.#signatures = new Map();
+      const data = await this.#handleSignature({ action: "get" });
+      if (data) {
+        for (const { uuid, description, signatureData } of data) {
+          this.#signatures.set(uuid, { description, signatureData });
+        }
+      }
+    }
+    return this.#signatures;
+  }
+
+  async isFull() {
+    // We want to store at most 5 signatures.
+    return (await this.size()) === 5;
+  }
+
+  async size() {
+    return (await this.getAll()).size;
+  }
+
+  async create(data) {
+    if (await this.isFull()) {
+      return null;
+    }
+    const uuid = await this.#handleSignature({
+      action: "create",
+      ...data,
+    });
+    if (!uuid) {
+      return null;
+    }
+    this.#signatures.set(uuid, data);
+    return uuid;
+  }
+
+  async delete(uuid) {
+    const signatures = await this.getAll();
+    if (!signatures.has(uuid)) {
+      return false;
+    }
+    if (await this.#handleSignature({ action: "delete", uuid })) {
+      signatures.delete(uuid);
+      return true;
+    }
+    return false;
+  }
+}
+
 class ExternalServices extends BaseExternalServices {
   updateFindControlState(data) {
     FirefoxCom.request("updateFindControlState", data);
@@ -579,6 +656,10 @@ class ExternalServices extends BaseExternalServices {
 
   createScripting() {
     return FirefoxScripting;
+  }
+
+  createSignatureStorage(eventBus, signal) {
+    return new SignatureStorage(eventBus, signal);
   }
 
   dispatchGlobalEvent(event) {

@@ -104,6 +104,20 @@ class Doc extends PDFObject {
   }
 
   _initActions() {
+    for (const { obj } of this._fields.values()) {
+      // Some fields may have compute their values so we need to send them
+      // to the view.
+      const initialValue = obj._initialValue;
+      if (initialValue) {
+        this._send({
+          id: obj._id,
+          siblings: obj._siblings,
+          value: initialValue,
+          formattedValue: obj.value.toString(),
+        });
+      }
+    }
+
     const dontRun = new Set([
       "WillClose",
       "WillSave",
@@ -175,9 +189,16 @@ class Doc extends PDFObject {
 
   _runActions(name) {
     const actions = this._actions.get(name);
-    if (actions) {
-      for (const action of actions) {
+    if (!actions) {
+      return;
+    }
+    for (const action of actions) {
+      try {
         this._globalEval(action);
+      } catch (error) {
+        const serializedError = serializeError(error);
+        serializedError.value = `Error when executing "${name}" for document\n${serializedError.value}`;
+        this._send(serializedError);
       }
     }
   }

@@ -2,6 +2,7 @@
 *.error
 
 !boundingBox_invalid.pdf
+!pdkids.pdf
 !tracemonkey.pdf
 !TrueType_without_cmap.pdf
 !franz.pdf
@@ -15,6 +16,7 @@
 !bug1727053.pdf
 !issue18408_reduced.pdf
 !bug1907000_reduced.pdf
+!bug1953099.pdf
 !issue11913.pdf
 !issue2391-1.pdf
 !issue2391-2.pdf
@@ -26,6 +28,7 @@
 !checkbox-bad-appearance.pdf
 !issue4684.pdf
 !issue8092.pdf
+!issue19802.pdf
 !issue5256.pdf
 !issue5801.pdf
 !issue5946.pdf
@@ -93,6 +96,7 @@
 !issue8424.pdf
 !issue8480.pdf
 !bug1650302_reduced.pdf
+!issue18816.pdf
 !issue8570.pdf
 !issue8697.pdf
 !issue8702.pdf
@@ -104,6 +108,7 @@
 !issue9084.pdf
 !issue12963.pdf
 !issue9105_reduced.pdf
+!issue19484_2.pdf
 !issue9105_other.pdf
 !issue9252.pdf
 !issue9262_reduced.pdf
@@ -120,6 +125,7 @@
 !issue10542_reduced.pdf
 !issue10665_reduced.pdf
 !issue11016_reduced.pdf
+!issue19532.pdf
 !issue15516_reduced.pdf
 !issue11045.pdf
 !bug1057544.pdf
@@ -155,6 +161,7 @@
 !bug1020858.pdf
 !prefilled_f1040.pdf
 !bug1050040.pdf
+!issue18986.pdf
 !bug1200096.pdf
 !bug1068432.pdf
 !issue12295.pdf
@@ -184,6 +191,8 @@
 !issue4706.pdf
 !rotation.pdf
 !simpletype3font.pdf
+!Type3WordSpacing.pdf
+!IndexedCS_negative_and_high.pdf
 !sizes.pdf
 !javauninstall-7r.pdf
 !file_url_link.pdf
@@ -197,6 +206,7 @@
 !issue3928.pdf
 !issue8565.pdf
 !clippath.pdf
+!issue19800.pdf
 !issue8795_reduced.pdf
 !bug1755507.pdf
 !close-path-bug.pdf
@@ -230,6 +240,7 @@
 !issue5954.pdf
 !issue6612.pdf
 !alphatrans.pdf
+!issue14200.pdf
 !pattern_text_embedded_font.pdf
 !devicen.pdf
 !cmykjpeg.pdf
@@ -253,6 +264,7 @@
 !bug860632.pdf
 !bug894572.pdf
 !bug911034.pdf
+!issue19695.pdf
 !bug1108301.pdf
 !issue10301.pdf
 !bug1157493.pdf
@@ -272,6 +284,7 @@
 !pr6531_1.pdf
 !pr6531_2.pdf
 !pr7352.pdf
+!pr19449.pdf
 !bug900822.pdf
 !bug1392647.pdf
 !issue918.pdf
@@ -460,6 +473,7 @@
 !issue6069.pdf
 !issue6106.pdf
 !issue6296.pdf
+!issue19848.pdf
 !bug852992_reduced.pdf
 !issue13271.pdf
 !issue6298.pdf
@@ -475,6 +489,7 @@
 !openoffice.pdf
 !js-buttons.pdf
 !issue7014.pdf
+!issue19484_1.pdf
 !issue8187.pdf
 !annotation-link-text-popup.pdf
 !issue9278.pdf
@@ -499,6 +514,7 @@
 !annotation-line-without-appearance.pdf
 !bug1669099.pdf
 !annotation-square-circle.pdf
+!bug1942064.pdf
 !annotation-square-circle-without-appearance.pdf
 !annotation-stamp.pdf
 !issue14048.pdf
@@ -525,7 +541,9 @@
 !bug1743245.pdf
 !quadpoints.pdf
 !transparent.pdf
+!issue19326.pdf
 !issue13931.pdf
+!issue19474.pdf
 !xobject-image.pdf
 !issue15441.pdf
 !issue6605.pdf
@@ -551,6 +569,9 @@
 !poppler-67295-0.pdf
 !poppler-85140-0.pdf
 !issue15012.pdf
+!issue19176.pdf
+!bug1947248_text.pdf
+!bug1947248_forms.pdf
 !issue15150.pdf
 !poppler-395-0-fuzzed.pdf
 !issue14165.pdf
@@ -589,6 +610,8 @@
 !issue15690.pdf
 !bug1802888.pdf
 !issue15759.pdf
+!issue18823.pdf
+!pr20043.pdf
 !issue15753.pdf
 !issue15789.pdf
 !fields_order.pdf
@@ -600,7 +623,9 @@
 !bug1815476.pdf
 !issue16021.pdf
 !bug1770750.pdf
+!issue19971.pdf
 !issue16063.pdf
+!issue19389.pdf
 !issue16067.pdf
 !bug1820909.1.pdf
 !issue16221.pdf
@@ -645,6 +670,7 @@
 !bug1868759.pdf
 !issue17730.pdf
 !bug1883609.pdf
+!issue19550.pdf
 !issue17808.pdf
 !issue17871_bottom_right.pdf
 !issue17871_top_right.pdf
@@ -668,3 +694,53 @@
 !issue18694.pdf
 !issue18693.pdf
 !bug1918115.pdf
+!bug1919513.pdf
+!issue16038.pdf
+!highlight_popup.pdf
+!issue18072.pdf
+!stamps.pdf
+!issue15096.pdf
+!issue18036.pdf
+!issue18894.pdf
+!bug1922766.pdf
+!issue18956.pdf
+!issue19083.pdf
+!issue19120.pdf
+!bug1934157.pdf
+!rotated_ink.pdf
+!inks.pdf
+!inks_basic.pdf
+!issue19182.pdf
+!issue18911.pdf
+!issue19207.pdf
+!issue19239.pdf
+!issue19360.pdf
+!bug1019475_1.pdf
+!bug1019475_2.pdf
+!issue19505.pdf
+!colors.pdf
+!red_stamp.pdf
+!issue19633.pdf
+!issue19424.pdf
+!issue18529.pdf
+!issue16742.pdf
+!chrome-text-selection-markedContent.pdf
+!bug1963407.pdf
+!issue19517.pdf
+!empty#hash.pdf
+!bug1885505.pdf
+!bug1974436.pdf
+!firefox_logo.pdf
+!issue20062.pdf
+!issue20102.pdf
+!issue20065.pdf
+!bug1708041.pdf
+!bug1978317.pdf
+!dates.pdf
+!dates_save.pdf
+!print_protection.pdf
+!tracemonkey_with_annotations.pdf
+!tracemonkey_with_editable_annotations.pdf
+!bug1980958.pdf
+!tracemonkey_annotation_on_page_8.pdf
+!issue20232.pdf

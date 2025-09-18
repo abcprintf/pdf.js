@@ -38,11 +38,11 @@ describe("accessibility", () => {
   describe("structure tree", () => {
     let pages;
 
-    beforeAll(async () => {
+    beforeEach(async () => {
       pages = await loadAndWait("structure_simple.pdf", ".structTree");
     });
 
-    afterAll(async () => {
+    afterEach(async () => {
       await closePages(pages);
     });
 
@@ -96,7 +96,7 @@ describe("accessibility", () => {
               .toBeTrue();
 
             const handle = await waitForPageRendered(page);
-            await page.click(`#zoom${i < 4 ? "In" : "Out"}`);
+            await page.click(`#zoom${i < 4 ? "In" : "Out"}Button`);
             await awaitPromise(handle);
           }
         })
@@ -107,14 +107,14 @@ describe("accessibility", () => {
   describe("Annotation", () => {
     let pages;
 
-    beforeAll(async () => {
+    beforeEach(async () => {
       pages = await loadAndWait(
         "tracemonkey_a11y.pdf",
         ".textLayer .endOfContent"
       );
     });
 
-    afterAll(async () => {
+    afterEach(async () => {
       await closePages(pages);
     });
 
@@ -147,11 +147,11 @@ describe("accessibility", () => {
   describe("Annotations order", () => {
     let pages;
 
-    beforeAll(async () => {
+    beforeEach(async () => {
       pages = await loadAndWait("fields_order.pdf", ".annotationLayer");
     });
 
-    afterAll(async () => {
+    afterEach(async () => {
       await closePages(pages);
     });
 
@@ -180,11 +180,11 @@ describe("accessibility", () => {
   describe("Stamp annotation accessibility", () => {
     let pages;
 
-    beforeAll(async () => {
+    beforeEach(async () => {
       pages = await loadAndWait("tagged_stamp.pdf", ".annotationLayer");
     });
 
-    afterAll(async () => {
+    afterEach(async () => {
       await closePages(pages);
     });
 
@@ -245,11 +245,11 @@ describe("accessibility", () => {
   describe("Figure in the content stream", () => {
     let pages;
 
-    beforeAll(async () => {
+    beforeEach(async () => {
       pages = await loadAndWait("bug1708040.pdf", ".textLayer");
     });
 
-    afterAll(async () => {
+    afterEach(async () => {
       await closePages(pages);
     });
 
@@ -277,6 +277,27 @@ describe("accessibility", () => {
           expect(ariaLabel)
             .withContext(`In ${browserName}`)
             .toEqual("A logo of a fox and a globe");
+        })
+      );
+    });
+  });
+
+  describe("No undefined id", () => {
+    let pages;
+
+    beforeEach(async () => {
+      pages = await loadAndWait("issue20102.pdf", ".textLayer");
+    });
+
+    afterEach(async () => {
+      await closePages(pages);
+    });
+
+    it("must check that span hasn't an 'undefined' id", async () => {
+      await Promise.all(
+        pages.map(async ([browserName, page]) => {
+          const id = await page.$eval("span.markedContent", span => span.id);
+          expect(id).withContext(`In ${browserName}`).toBe("");
         })
       );
     });
